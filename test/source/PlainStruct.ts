@@ -1,6 +1,7 @@
 import { MyEnum } from "./MyEnum";
 import { StructA } from "./StructA";
 import { StructC } from "./StructC";
+import { StructD } from "./StructD";
 
 export const PlainStructI: StructA = {
     id: MyEnum['I'],
@@ -18,6 +19,14 @@ export const PlainStructI_I: StructA = {
     id: MyEnum['I'],
     some: 1,
     childs: []
+}
+
+export const PlainStructI_II: StructD = {
+    self: undefined as any
+}
+
+export const PlainStructI_III: StructD = {
+    self: undefined as any
 }
 
 export const PlainStructII: StructC = {
