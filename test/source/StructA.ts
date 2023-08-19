@@ -6,6 +6,8 @@ export class StructA {
 
     @JsTypeDefine(MyEnum)
     public id: MyEnum;
+    @JsTypeDefine(Object)
+    public some: any;
     @JsTypeDefine(Array(StructB))
     public childs: StructB[];
 

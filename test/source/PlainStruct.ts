@@ -4,6 +4,7 @@ import { StructC } from "./StructC";
 
 export const PlainStructI: StructA = {
     id: MyEnum['I'],
+    some: "1",
     childs: [
         {
             str: "o_string",
@@ -15,6 +16,7 @@ export const PlainStructI: StructA = {
 
 export const PlainStructI_I: StructA = {
     id: MyEnum['I'],
+    some: 1,
     childs: []
 }
 

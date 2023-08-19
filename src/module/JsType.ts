@@ -11,7 +11,8 @@ export class JsType {
         for (const code of Object.keys(types)) {
             const childSchema = types[code];
             const childStructure = structure[code];
-            if (childStructure == undefined) {
+            const isAny = this.isAny(childSchema);
+            if (childStructure == undefined && !isAny) {
                 throw new JsTypeError(JsTypeMessages.JS_TYPE_002, code);
             }
             if (this.isVector(childSchema)) {
@@ -46,7 +47,7 @@ export class JsType {
     }
 
     public static validePrimitive(code: string, schema: any, structure: any) {
-        const schemaType = this.typeofPrimitiveSchema(schema)
+        const schemaType = this.typeofSchemaInstance(schema)
         const structureType = this.typeOf(structure)
         if (schemaType !== structureType)
             throw new JsTypeError(JsTypeMessages.JS_TYPE_004, schemaType, code, structureType);
@@ -64,8 +65,8 @@ export class JsType {
         return {};
     }
 
-    private static typeofPrimitiveSchema(schema: any) {
-        if (this.isPrimitive(schema)) {
+    private static typeofSchemaInstance(schema: any) {
+        if (schema instanceof Object) {
             const instance = new schema();
             return this.typeOf(instance.valueOf());
         }
@@ -77,7 +78,11 @@ export class JsType {
     }
 
     private static isPrimitive(schema: any): boolean {
-        return this.typeOf(schema) === 'function' && schema.valueOf != undefined
+        return schema === String || schema === Number || schema === Boolean
+    }
+
+    private static isAny(schema: any): boolean {
+        return schema === Object
     }
 
     private static isStruct(schema: any): boolean {
