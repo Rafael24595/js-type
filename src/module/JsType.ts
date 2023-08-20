@@ -9,17 +9,26 @@ export class JsType {
         this.history = [];
     }
 
+    /** 
+     * Validate if an structure implements a JsType schema.
+     * @param schema object.
+     * @param structure object.
+     * @throws an exception if the structure does not implement correctly the given schema or if the schema does not implement JsType.
+     */
     public static valide(schema: Object, structure: Object): void {
         const instance = new JsType();
         instance._valide(schema, structure);
     }
 
+    /** 
+     * Validate if a structure implements JsType.
+     * @param schema object.
+     */
     public static isTyped(schema: any): boolean {
         return schema.prototype?.jstypes != undefined;
     }
 
-    private _valide(scheme: Object, structure: any): void {
-        const schema = scheme as any;
+    private _valide(schema: any, structure: any): void {
         if (!JsType.isTyped(schema))
             throw new JsTypeError(JsTypeMessages.JS_TYPE_001, schema.name);
         if(this.isValidated(structure))
@@ -43,7 +52,7 @@ export class JsType {
 
     private valideField(code: string, schema: any, structure: any): void {
         if(this.isAny(schema)) {
-            return
+            return;
         }
         if (structure == undefined) {
             throw new JsTypeError(JsTypeMessages.JS_TYPE_002, code);
@@ -66,15 +75,15 @@ export class JsType {
 
     private valideVector(code: string, schema: any, structure: any): void {
         if (!Array.isArray(structure))
-            throw new JsTypeError(JsTypeMessages.JS_TYPE_003, code, this.typeOf(structure))
+            throw new JsTypeError(JsTypeMessages.JS_TYPE_003, code, this.typeOf(structure));
         for (const element of structure) {
-            this._valide(schema, element)
+            this._valide(schema, element);
         }
     }
 
     public validePrimitive(code: string, schema: any, structure: any): void {
-        const schemaType = this.typeofSchemaInstance(schema)
-        const structureType = this.typeOf(structure)
+        const schemaType = this.typeofSchemaInstance(schema);
+        const structureType = this.typeOf(structure);
         if (schemaType !== structureType)
             throw new JsTypeError(JsTypeMessages.JS_TYPE_004, schemaType, code, structureType);
     }
@@ -85,7 +94,7 @@ export class JsType {
             throw new JsTypeError(JsTypeMessages.JS_TYPE_005, structure, code, Object.values(schema));
     }
 
-    private types(schema: any) {
+    private types(schema: any): any {
         if (JsType.isTyped(schema))
             return schema.prototype.jstypes;
         return {};
@@ -96,7 +105,7 @@ export class JsType {
             const instance = new schema();
             return this.typeOf(instance.valueOf());
         }
-        return "undefined";
+        return 'undefined';
     }
 
     private typeOf(structure: any) {
@@ -104,15 +113,15 @@ export class JsType {
     }
 
     private isPrimitive(schema: any): boolean {
-        return schema === String || schema === Number || schema === Boolean
+        return schema === String || schema === Number || schema === Boolean;
     }
 
     private isAny(schema: any): boolean {
-        return schema === Object
+        return schema === Object;
     }
 
     private isStruct(schema: any): boolean {
-        return this.typeOf(schema) === 'object' && schema instanceof Object
+        return this.typeOf(schema) === 'object' && schema instanceof Object;
     }
 
     private isVector(schema: any): boolean {
