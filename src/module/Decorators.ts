@@ -6,6 +6,7 @@
  * - Number: for 'number' type.
  * - Boolean: for 'boolean' type.
  * - Array(T): for vector type of T.
+ * - Enum reference for value range.
  * - Structure with one or more fields that implements JsType.
  */
 export const JsTypeDefine = (value: Object) => {
