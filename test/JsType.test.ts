@@ -1,5 +1,5 @@
 import { JsType } from "../src/module/JsType";
-import { PlainStructI, PlainStructII, PlainStructIII, PlainStructIV, PlainStructI_I, PlainStructI_II, PlainStructI_III, PlainStructV, PlainStructVI } from "./source/PlainStruct";
+import { PlainStructI, PlainStructII, PlainStructIII, PlainStructIV, PlainStructI_I, PlainStructI_II, PlainStructI_III, PlainStructV, PlainStructVI, PlainStructVII } from "./source/PlainStruct";
 import { StructA } from "./source/StructA";
 import { TemplateBuilder } from "../src/commons/builder/TemplateBuilder";
 import { JsTypeMessages } from "../src/commons/error/JsTypeMessages";
@@ -8,6 +8,7 @@ import { StructC } from "./source/StructC";
 import { StructB } from "./source/StructB";
 import { MyEnum } from "./source/MyEnum";
 import { StructD } from "./source/StructD";
+import { StructE } from "./source/StructE";
 
 test('Success validation: Full object (PlainStructI)', () => {
     JsType.valide(StructA, PlainStructI);
@@ -63,4 +64,12 @@ test('Failed validation: Value out of bounds (PlainStructVI)', () => {
     };
     expect(t).toThrow(JsTypeError);
     expect(t).toThrow(TemplateBuilder.message(JsTypeMessages.JS_TYPE_005, ["Not-Found", "id", Object.values(MyEnum)]));
+});
+
+test('Failed validation: JsType not implemented for sub-structure (PlainStructVII)', () => {
+    const t = () => {
+        JsType.valide(StructE, PlainStructVII);
+    };
+    expect(t).toThrow(JsTypeError);
+    expect(t).toThrow(TemplateBuilder.message(JsTypeMessages.JS_TYPE_001, [StructC.name]));
 });

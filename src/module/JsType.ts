@@ -9,12 +9,12 @@ export class JsType {
         this.history = [];
     }
 
-    public static valide(scheme: Object, structure: any) {
+    public static valide(schema: Object, structure: Object): void {
         const instance = new JsType();
-        instance._valide(scheme, structure);
+        instance._valide(schema, structure);
     }
 
-    public static isTyped(schema: any) {
+    public static isTyped(schema: any): boolean {
         return schema.prototype?.jstypes != undefined;
     }
 
@@ -32,7 +32,7 @@ export class JsType {
         }
     }
 
-    private isValidated(structure: any) {
+    private isValidated(structure: any): boolean {
         if (this.typeOf(structure) === 'object') {
             if (this.history.indexOf(structure) !== -1) 
                 return true;
@@ -42,7 +42,10 @@ export class JsType {
     }
 
     private valideField(code: string, schema: any, structure: any): void {
-        if (structure == undefined && !this.isAny(schema)) {
+        if(this.isAny(schema)) {
+            return
+        }
+        if (structure == undefined) {
             throw new JsTypeError(JsTypeMessages.JS_TYPE_002, code);
         }
         if (this.isVector(schema)) {
@@ -58,12 +61,10 @@ export class JsType {
             this.valideStruct(code, schema, structure);
             return;
         }
-        if (JsType.isTyped(schema)) {
-            this._valide(schema, structure);
-        }
+        this._valide(schema, structure);
     }
 
-    private valideVector(code: string, schema: any, structure: any) {
+    private valideVector(code: string, schema: any, structure: any): void {
         if (!Array.isArray(structure))
             throw new JsTypeError(JsTypeMessages.JS_TYPE_003, code, this.typeOf(structure))
         for (const element of structure) {
@@ -71,14 +72,14 @@ export class JsType {
         }
     }
 
-    public validePrimitive(code: string, schema: any, structure: any) {
+    public validePrimitive(code: string, schema: any, structure: any): void {
         const schemaType = this.typeofSchemaInstance(schema)
         const structureType = this.typeOf(structure)
         if (schemaType !== structureType)
             throw new JsTypeError(JsTypeMessages.JS_TYPE_004, schemaType, code, structureType);
     }
 
-    public valideStruct(code: string, schema: any, structure: any) {
+    public valideStruct(code: string, schema: any, structure: any): void {
         const exists = Object.values(schema).includes(structure);
         if (!exists)
             throw new JsTypeError(JsTypeMessages.JS_TYPE_005, structure, code, Object.values(schema));

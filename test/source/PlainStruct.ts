@@ -2,6 +2,7 @@ import { MyEnum } from "./MyEnum";
 import { StructA } from "./StructA";
 import { StructC } from "./StructC";
 import { StructD } from "./StructD";
+import { StructE } from "./StructE";
 
 export const PlainStructI: StructA = {
     id: MyEnum['I'],
@@ -71,4 +72,12 @@ export const PlainStructVI: any = {
             bool: false
         }
     ]
+}
+
+export const PlainStructVII: StructE = {
+    untyped: {
+        str: "o_string",
+        int: 0,
+        bool: false
+    }
 }

@@ -11,8 +11,9 @@ export class StructA {
     @JsTypeDefine(Array(StructB))
     public childs: StructB[];
 
-    public constructor(id: MyEnum, childs: StructB[]) {
+    public constructor(id: MyEnum, some: any, childs: StructB[]) {
         this.id = id;
+        this.some = some;
         this.childs = childs;
     };
 
