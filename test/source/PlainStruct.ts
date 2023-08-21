@@ -7,6 +7,11 @@ import { StructE } from "./StructE";
 export const PlainStructI: StructA = {
     id: MyEnum['I'],
     some: "1",
+    parent: {
+        str: "o_string",
+        int: 0,
+        bool: false
+    },
     childs: [
         {
             str: "o_string",
@@ -19,6 +24,11 @@ export const PlainStructI: StructA = {
 export const PlainStructI_I: StructA = {
     id: MyEnum['I'],
     some: 1,
+    parent: {
+        str: "o_string",
+        int: 0,
+        bool: false
+    },
     childs: []
 }
 
@@ -48,6 +58,11 @@ export const PlainStructIII: any = {
 
 export const PlainStructIV: any = {
     id: MyEnum['I'],
+    parent: {
+        str: "o_string",
+        int: 0,
+        bool: false
+    },
     childs: {
         1: {
             str: "o_string",
@@ -65,6 +80,11 @@ export const PlainStructV: any = {
 
 export const PlainStructVI: any = {
     id: "Not-Found",
+    parent: {
+        str: "o_string",
+        int: 0,
+        bool: false
+    },
     childs: [
         {
             str: "o_string",
@@ -80,4 +100,17 @@ export const PlainStructVII: StructE = {
         int: 0,
         bool: false
     }
+}
+
+export const PlainStructVIII: any = {
+    id: MyEnum['I'],
+    some: "1",
+    parent: false,
+    childs: [
+        {
+            str: "o_string",
+            int: 0,
+            bool: false
+        }
+    ]
 }

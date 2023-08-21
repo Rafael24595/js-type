@@ -70,7 +70,7 @@ export class JsType {
             this.valideStruct(code, schema, structure);
             return;
         }
-        this._valide(schema, structure);
+        this.valideJsTypeStruct(code, schema, structure);
     }
 
     private valideVector(code: string, schema: any, structure: any): void {
@@ -92,6 +92,13 @@ export class JsType {
         const exists = Object.values(schema).includes(structure);
         if (!exists)
             throw new JsTypeError(JsTypeMessages.JS_TYPE_005, structure, code, Object.values(schema));
+    }
+
+    private valideJsTypeStruct(code: string, schema: any, structure: any): void {
+        const structureType = this.typeOf(structure);
+        if (structureType !== 'object')
+            throw new JsTypeError(JsTypeMessages.JS_TYPE_006, schema.name, code, structureType);
+        this._valide(schema, structure);
     }
 
     private types(schema: any): any {

@@ -1,5 +1,5 @@
 import { JsType } from "../src/module/JsType";
-import { PlainStructI, PlainStructII, PlainStructIII, PlainStructIV, PlainStructI_I, PlainStructI_II, PlainStructI_III, PlainStructV, PlainStructVI, PlainStructVII } from "./source/PlainStruct";
+import { PlainStructI, PlainStructII, PlainStructIII, PlainStructIV, PlainStructI_I, PlainStructI_II, PlainStructI_III, PlainStructV, PlainStructVI, PlainStructVII, PlainStructVIII } from "./source/PlainStruct";
 import { StructA } from "./source/StructA";
 import { TemplateBuilder } from "../src/commons/builder/TemplateBuilder";
 import { JsTypeMessages } from "../src/commons/error/JsTypeMessages";
@@ -72,4 +72,12 @@ test('Failed validation: JsType not implemented for sub-structure (PlainStructVI
     };
     expect(t).toThrow(JsTypeError);
     expect(t).toThrow(TemplateBuilder.message(JsTypeMessages.JS_TYPE_001, [StructC.name]));
+});
+
+test('Failed validation: JsType struct expected (PlainStructVIII)', () => {
+    const t = () => {
+        JsType.valide(StructA, PlainStructVIII);
+    };
+    expect(t).toThrow(JsTypeError);
+    expect(t).toThrow(TemplateBuilder.message(JsTypeMessages.JS_TYPE_006, [StructB.name, "parent","boolean"]));
 });
