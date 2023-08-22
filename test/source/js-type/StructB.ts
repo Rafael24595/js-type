@@ -1,4 +1,4 @@
-import { JsTypeDefine } from "../../src/module/Decorators";
+import { JsTypeDefine } from "../../../src/module/Decorators";
 
 export class StructB {
     

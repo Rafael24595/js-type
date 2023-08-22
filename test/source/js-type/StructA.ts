@@ -1,4 +1,4 @@
-import { JsTypeDefine } from '../../src/module/Decorators'
+import { JsTypeDefine } from '../../../src/module/Decorators'
 import { MyEnum } from './MyEnum';
 import { StructB } from './StructB';
 

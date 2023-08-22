@@ -1,14 +1,14 @@
 import { JsType } from "../src/module/JsType";
-import { PlainStructI, PlainStructII, PlainStructIII, PlainStructIV, PlainStructI_I, PlainStructI_II, PlainStructI_III, PlainStructV, PlainStructVI, PlainStructVII, PlainStructVIII } from "./source/PlainStruct";
-import { StructA } from "./source/StructA";
+import { PlainStructI, PlainStructII, PlainStructIII, PlainStructIV, PlainStructI_I, PlainStructI_II, PlainStructI_III, PlainStructV, PlainStructVI, PlainStructVII, PlainStructVIII } from "./source/js-type/PlainStruct";
+import { StructA } from "./source/js-type/StructA";
 import { TemplateBuilder } from "../src/commons/builder/TemplateBuilder";
 import { JsTypeMessages } from "../src/commons/error/JsTypeMessages";
 import { JsTypeError } from "../src/commons/error/JsTypeError";
-import { StructC } from "./source/StructC";
-import { StructB } from "./source/StructB";
-import { MyEnum } from "./source/MyEnum";
-import { StructD } from "./source/StructD";
-import { StructE } from "./source/StructE";
+import { StructC } from "./source/js-type/StructC";
+import { StructB } from "./source/js-type/StructB";
+import { MyEnum } from "./source/js-type/MyEnum";
+import { StructD } from "./source/js-type/StructD";
+import { StructE } from "./source/js-type/StructE";
 
 test('Success validation: Full object (PlainStructI)', () => {
     JsType.valide(StructA, PlainStructI);
