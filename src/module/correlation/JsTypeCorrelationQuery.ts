@@ -32,12 +32,13 @@ export class JsTypeCorrelationQuery {
     }
 
     private addItem(key: string, type:RelationTypes, value: any) {
-        const arg = this.items[key];
-        if(arg == undefined) {
+        const item = this.items[key];
+        if(item == undefined) {
             this.items[key] = new JsTypeCorrelationItem(key, [type], value);
             return;
         }
-        arg.addType(type);
+        item.addType(type);
+        item.value = value;
     }
 
 }

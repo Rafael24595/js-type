@@ -7,4 +7,6 @@ export enum JsTypeMessages {
     JS_TYPE_006 = "JsType structure \"{}\" for \"{}\" expected but \"{}\" found.",
     JS_TYPE_101 = "Schema required \"{}\" but not found.",
     JS_TYPE_102 = "Schema and structure types does not match.",
+    JS_TYPE_103 = "Type mismatch cannot compare a schema with object status \"{}\" with a structure with object status\"{}\".",
+    JS_TYPE_104 = "Object type coincidence value must be \"{}\" type.",
 }
