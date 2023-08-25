@@ -9,7 +9,7 @@ export class TemplateBuilder {
             if(i != fragment.length -1) {
                 const value = args[i] != undefined ? args[i] : "";
                 build.push(value);
-            } else if(args.length >= i) {
+            } else if(args.length > i) {
                 const value = "(" + args.slice(i, args.length).join(', ') + ")";
                 build.push(value);
             }

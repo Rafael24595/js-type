@@ -10,7 +10,7 @@ export class JsType {
     }
 
     /** 
-     * Validate if an structure implements a JsType schema.
+     * Validate if a structure implements a JsType schema.
      * @param schema object.
      * @param structure object.
      * @throws an exception if the structure does not implement correctly the given schema or if the schema does not implement JsType.

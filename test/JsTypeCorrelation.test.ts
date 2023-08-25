@@ -88,3 +88,15 @@ test('Failed validation: Sub-correlation mismatch types', () => {
     expect(t).toThrow(JsTypeError);
     expect(t).toThrow(TemplateBuilder.message(JsTypeMessages.JS_TYPE_103, [true, false]));
 });
+
+test('Failed validation: Item out of bounds', () => {
+    const correlation = JsTypeCorrelationQuery.instance()
+        .restrictBounds()
+        .addCoincidence("name")
+        .addFilter("type", "A");
+    const t = () => {
+        JsTypeCorrelation.valide(VECTOR_PARAMETER_DEFINITION, VECTOR_PARAMETER_IMPLEMENTATION, correlation);
+    };
+    expect(t).toThrow(JsTypeError);
+    expect(t).toThrow(TemplateBuilder.message(JsTypeMessages.JS_TYPE_105, [JSON.stringify([VECTOR_PARAMETER_IMPLEMENTATION[3]])]));
+});

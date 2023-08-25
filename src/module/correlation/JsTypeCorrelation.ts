@@ -14,6 +14,13 @@ export class JsTypeCorrelation {
         this.conflicts = {};
     }
 
+    /** 
+     * Validate if a data collection contains elements defined in a filtered schema.
+     * @param schema object.
+     * @param structure object.
+     * @param relation JsTypeCorrelationQuery.
+     * @throws an exception if the collection does not implement correctly the given schema.
+     */
     public static valide(schema: any, structure: any, relation: JsTypeCorrelationQuery) {
         const instance = new JsTypeCorrelation(relation);
         instance._valide(schema, structure);
@@ -33,6 +40,10 @@ export class JsTypeCorrelation {
         for (const childSchema of schema) {
             if(this.isValidable(childSchema) && !this.existsStructure(childSchema, structure))
                 throw new JsTypeError(JsTypeMessages.JS_TYPE_101, JSON.stringify(this.conflicts));
+        }
+        if(this.filter.isStrictBounds() && structure.length > this.valides.length){
+            const outOfBounds = structure.filter(item => !this.valides.includes(item))
+            throw new JsTypeError(JsTypeMessages.JS_TYPE_105, JSON.stringify(outOfBounds));
         }
     }
 
@@ -69,7 +80,7 @@ export class JsTypeCorrelation {
         return true;
     }
 
-    public isValidable(schema: any) {
+    private isValidable(schema: any) {
         for (const filter of this.filter.getFilter()) {
             if(!(filter.value instanceof JsTypeCorrelationQuery) && schema[filter.key] != filter.value)
                 return false;
