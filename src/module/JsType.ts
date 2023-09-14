@@ -5,7 +5,7 @@ export class JsType {
 
     private history: Object[];
 
-    private constructor() {
+    protected constructor() {
         this.history = [];
     }
 
@@ -15,7 +15,10 @@ export class JsType {
      * @param structure object.
      * @throws an exception if the structure does not implement correctly the given schema or if the schema does not implement JsType.
      */
-    public static valide(schema: Object, structure: Object): void {
+    public static valide(structure: Object): void {
+        const schema = this;
+        if(schema == JsType)
+            throw new JsTypeError(JsTypeMessages.JS_TYPE_007);  
         const instance = new JsType();
         instance._valide(schema, structure);
     }
@@ -25,20 +28,29 @@ export class JsType {
      * @param schema object.
      */
     public static isTyped(schema: any): boolean {
-        return schema.prototype?.jstypes != undefined;
+        return schema.prototype?.jstype != undefined;
     }
+
+    private isStrictBounds(schema: any): boolean {
+        return JsType.isTyped(schema) && schema.prototype.jstype.strict_bounds != undefined && schema.prototype.jstype.strict_bounds;
+    } 
 
     private _valide(schema: any, structure: any): void {
         if (!JsType.isTyped(schema))
             throw new JsTypeError(JsTypeMessages.JS_TYPE_001, schema.name);
         if(this.isValidated(structure))
             return;
-        const types = this.types(schema)
-        for (const code of Object.keys(types)) {
+        const types = this.types(schema);
+        const codes = Object.keys(types);
+        for (const code of codes) {
             const childSchema = types[code];
             const childStructure = structure[code];
             this.valideField(code, childSchema, childStructure);
         }
+        const outOfBounds = Object.keys(structure).filter(cs => !codes.includes(cs));
+        if(this.isStrictBounds(schema) && outOfBounds.length > 0)
+            throw new JsTypeError(JsTypeMessages.JS_TYPE_008, outOfBounds.join(","));
+
     }
 
     private isValidated(structure: any): boolean {
@@ -103,7 +115,7 @@ export class JsType {
 
     private types(schema: any): any {
         if (JsType.isTyped(schema))
-            return schema.prototype.jstypes;
+            return schema.prototype.jstype.types;
         return {};
     }
 

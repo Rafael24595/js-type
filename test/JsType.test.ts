@@ -1,5 +1,5 @@
 import { JsType } from "../src/module/JsType";
-import { PlainStructI, PlainStructII, PlainStructIII, PlainStructIV, PlainStructI_I, PlainStructI_II, PlainStructI_III, PlainStructV, PlainStructVI, PlainStructVII, PlainStructVIII } from "./source/js-type/PlainStruct";
+import { PlainStructI, PlainStructII, PlainStructIII, PlainStructIV, PlainStructIX, PlainStructI_I, PlainStructI_II, PlainStructI_III, PlainStructV, PlainStructVI, PlainStructVII, PlainStructVIII } from "./source/js-type/PlainStruct";
 import { StructA } from "./source/js-type/StructA";
 import { TemplateBuilder } from "../src/commons/builder/TemplateBuilder";
 import { JsTypeMessages } from "../src/commons/error/JsTypeMessages";
@@ -11,11 +11,11 @@ import { StructD } from "./source/js-type/StructD";
 import { StructE } from "./source/js-type/StructE";
 
 test('Success validation: Full object (PlainStructI)', () => {
-    JsType.valide(StructA, PlainStructI);
+    StructA.valide(PlainStructI);
 });
 
 test('Success validation: Empty vector (PlainStructI_I)', () => {
-    JsType.valide(StructA, PlainStructI_I);
+    StructA.valide(PlainStructI_I);
 });
 
 test('Success validation: Circular reference (PlainStructI_II, PlainStructI_III)', () => {
@@ -23,12 +23,12 @@ test('Success validation: Circular reference (PlainStructI_II, PlainStructI_III)
     const structII = PlainStructI_III;
     structI.self = structII;
     structII.self = structI;
-    JsType.valide(StructD, structI);
+    StructD.valide(structI);
 });
 
 test('Failed validation: JsType not implemented (PlainStructII)', () => {
     const t = () => {
-        JsType.valide(StructC, PlainStructII);
+        StructC.valide(PlainStructII);
     };
     expect(t).toThrow(JsTypeError);
     expect(t).toThrow(TemplateBuilder.message(JsTypeMessages.JS_TYPE_001, [StructC.name]));
@@ -36,7 +36,7 @@ test('Failed validation: JsType not implemented (PlainStructII)', () => {
 
 test('Failed validation: Undefined field (PlainStructIII)', () => {
     const t = () => {
-        JsType.valide(StructA, PlainStructIII);
+        StructA.valide(PlainStructIII);
     };
     expect(t).toThrow(JsTypeError);
     expect(t).toThrow(TemplateBuilder.message(JsTypeMessages.JS_TYPE_002, ["id"]));
@@ -44,7 +44,7 @@ test('Failed validation: Undefined field (PlainStructIII)', () => {
 
 test('Failed validation: Vector expected (PlainStructIV)', () => {
     const t = () => {
-        JsType.valide(StructA, PlainStructIV);
+        StructA.valide(PlainStructIV);
     };
     expect(t).toThrow(JsTypeError);
     expect(t).toThrow(TemplateBuilder.message(JsTypeMessages.JS_TYPE_003, ["childs", "object"]));
@@ -52,7 +52,7 @@ test('Failed validation: Vector expected (PlainStructIV)', () => {
 
 test('Failed validation: Specific primitive expected (PlainStructV)', () => {
     const t = () => {
-        JsType.valide(StructB, PlainStructV);
+        StructB.valide(PlainStructV);
     };
     expect(t).toThrow(JsTypeError);
     expect(t).toThrow(TemplateBuilder.message(JsTypeMessages.JS_TYPE_004, ["boolean", "bool", "string"]));
@@ -60,7 +60,7 @@ test('Failed validation: Specific primitive expected (PlainStructV)', () => {
 
 test('Failed validation: Value out of bounds (PlainStructVI)', () => {
     const t = () => {
-        JsType.valide(StructA, PlainStructVI);
+        StructA.valide(PlainStructVI);
     };
     expect(t).toThrow(JsTypeError);
     expect(t).toThrow(TemplateBuilder.message(JsTypeMessages.JS_TYPE_005, ["Not-Found", "id", Object.values(MyEnum)]));
@@ -68,7 +68,7 @@ test('Failed validation: Value out of bounds (PlainStructVI)', () => {
 
 test('Failed validation: JsType not implemented for sub-structure (PlainStructVII)', () => {
     const t = () => {
-        JsType.valide(StructE, PlainStructVII);
+        StructE.valide(PlainStructVII);
     };
     expect(t).toThrow(JsTypeError);
     expect(t).toThrow(TemplateBuilder.message(JsTypeMessages.JS_TYPE_001, [StructC.name]));
@@ -76,8 +76,24 @@ test('Failed validation: JsType not implemented for sub-structure (PlainStructVI
 
 test('Failed validation: JsType struct expected (PlainStructVIII)', () => {
     const t = () => {
-        JsType.valide(StructA, PlainStructVIII);
+        StructA.valide(PlainStructVIII);
     };
     expect(t).toThrow(JsTypeError);
     expect(t).toThrow(TemplateBuilder.message(JsTypeMessages.JS_TYPE_006, [StructB.name, "parent","boolean"]));
+});
+
+test('Failed validation: JsType implementation used as template (PlainStructVIII)', () => {
+    const t = () => {
+        JsType.valide(PlainStructVIII);
+    };
+    expect(t).toThrow(JsTypeError);
+    expect(t).toThrow(TemplateBuilder.message(JsTypeMessages.JS_TYPE_007, []));
+});
+
+test('Failed validation: JsType implementation used as template (PlainStructVIII)', () => {
+    const t = () => {
+        StructA.valide(PlainStructIX);
+    };
+    expect(t).toThrow(JsTypeError);
+    expect(t).toThrow(TemplateBuilder.message(JsTypeMessages.JS_TYPE_008, ["outOfBoundsField"]));
 });

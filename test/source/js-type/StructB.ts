@@ -1,6 +1,7 @@
 import { JsTypeDefine } from "../../../src/module/Decorators";
+import { JsType } from "../../../src/module/JsType";
 
-export class StructB {
+export class StructB extends JsType {
     
     @JsTypeDefine(String)
     public str: string;
@@ -10,6 +11,7 @@ export class StructB {
     public bool: boolean;
 
     public constructor(str: string, int: number, bool: boolean) {
+        super();
         this.str = str;
         this.int = int;
         this.bool = bool;

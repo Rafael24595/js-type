@@ -1,10 +1,6 @@
 import { MyEnum } from "./MyEnum";
-import { StructA } from "./StructA";
-import { StructC } from "./StructC";
-import { StructD } from "./StructD";
-import { StructE } from "./StructE";
 
-export const PlainStructI: StructA = {
+export const PlainStructI: any = {
     id: MyEnum['I'],
     some: "1",
     parent: {
@@ -21,7 +17,7 @@ export const PlainStructI: StructA = {
     ]
 }
 
-export const PlainStructI_I: StructA = {
+export const PlainStructI_I: any = {
     id: MyEnum['I'],
     some: 1,
     parent: {
@@ -32,15 +28,15 @@ export const PlainStructI_I: StructA = {
     childs: []
 }
 
-export const PlainStructI_II: StructD = {
+export const PlainStructI_II: any = {
     self: undefined as any
 }
 
-export const PlainStructI_III: StructD = {
+export const PlainStructI_III: any = {
     self: undefined as any
 }
 
-export const PlainStructII: StructC = {
+export const PlainStructII: any = {
     str: "o_string",
     int: 0,
     bool: false
@@ -94,7 +90,7 @@ export const PlainStructVI: any = {
     ]
 }
 
-export const PlainStructVII: StructE = {
+export const PlainStructVII: any = {
     untyped: {
         str: "o_string",
         int: 0,
@@ -113,4 +109,22 @@ export const PlainStructVIII: any = {
             bool: false
         }
     ]
+}
+
+export const PlainStructIX: any = {
+    id: MyEnum['I'],
+    some: "1",
+    parent: {
+        str: "o_string",
+        int: 0,
+        bool: false
+    },
+    childs: [
+        {
+            str: "o_string",
+            int: 0,
+            bool: false
+        }
+    ],
+    outOfBoundsField: true
 }

@@ -1,99 +1,74 @@
-import { JsTypeError } from "../../commons/error/JsTypeError";
-import { JsTypeMessages } from "../../commons/error/JsTypeMessages";
-import { JsTypeCorrelationQuery } from "./JsTypeCorrelationQuery";
+import { JsTypeCorrelationCore } from "./JsTypeCorrelationCore";
+import { JsTypeCorrelationItem } from "./JsTypeCorrelationItem";
+import { RelationTypes } from "./Relationtypes";
 
 export class JsTypeCorrelation {
 
-    private filter: JsTypeCorrelationQuery
-    private valides: object[];
-    private conflicts: {[key:string]: any};
+    private items: { [key:string]: JsTypeCorrelationItem }
+    private strictBounds: boolean;
 
-    private constructor(relation: JsTypeCorrelationQuery) {
-        this.filter = relation;
-        this.valides = [];
-        this.conflicts = {};
+    private constructor() {
+        this.items = {};
+        this.strictBounds = false;
+    }
+
+    public static instance(): JsTypeCorrelation {
+        return new JsTypeCorrelation();
+    }
+
+    public match(definition: object, implementation: object) {
+        JsTypeCorrelationCore.valide(definition, implementation, this);
+    }
+
+    public getFilter(): JsTypeCorrelationItem[] {
+        return Object.values(this.items).filter(item => item.types.includes(RelationTypes.FILTER));
+    }
+
+    public addFilter(key: string, value: any): JsTypeCorrelation {
+        this.addItem(key, RelationTypes.FILTER, value);
+        return this;
     }
 
     /** 
-     * Validate if a data collection contains elements defined in a filtered schema.
-     * @param schema object.
-     * @param structure object.
-     * @param relation JsTypeCorrelationQuery.
-     * @throws an exception if the collection does not implement correctly the given schema.
+     * @returns The status value of bounds treatment, false by default.
      */
-    public static valide(schema: any, structure: any, relation: JsTypeCorrelationQuery) {
-        const instance = new JsTypeCorrelation(relation);
-        instance._valide(schema, structure);
+    public isStrictBounds(): boolean {
+        return this.strictBounds;
     }
 
-    public _valide(schema: any, structure: any) {
-        let schemas = schema;
-        let structures = structure;
-        if(!this.isVector(schema, structure)) {
-            schemas = [schema]
-            structures = [structure]
-        }
-        this.valideVector(schemas, structures);
+    /** 
+     * Changes the status value of bounds treatment to true, the existence of values out of bounds throws an JsTypeError.
+     */
+    public restrictBounds(): JsTypeCorrelation {
+        this.strictBounds = true;
+        return this;
     }
 
-    private valideVector(schema: any[], structure: any[]) {
-        for (const childSchema of schema) {
-            if(this.isValidable(childSchema) && !this.existsStructure(childSchema, structure))
-                throw new JsTypeError(JsTypeMessages.JS_TYPE_101, JSON.stringify(this.conflicts));
-        }
-        if(this.filter.isStrictBounds() && structure.length > this.valides.length){
-            const outOfBounds = structure.filter(item => !this.valides.includes(item))
-            throw new JsTypeError(JsTypeMessages.JS_TYPE_105, JSON.stringify(outOfBounds));
-        }
+    /** 
+     * Changes the status value of bounds treatment to false, the values out of bounds are allowed.
+     */
+    public unrestrictBounds(): JsTypeCorrelation {
+        this.strictBounds = false;
+        return this;
     }
 
-    private existsStructure(childSchema: any, structure: any[]) {
-        for (const childStructure of structure) {
-            if(!this.valides.includes(childStructure) && this.valideItem(childSchema, childStructure)) {
-                this.valides.push(childStructure);
-                return true;
-            }
-        }
-        return false;
+    public getCoincidence() {
+        return Object.values(this.items).filter(item => item.types.includes(RelationTypes.COINCIDENCE));
     }
 
-    private valideItem(schema: any, structure: any) {
-        for (const coincidence of this.filter.getCoincidence()) {
-            const schemaValue = schema[coincidence.key];
-            const structureValue = structure[coincidence.key];
-            const isObjectSchema = schemaValue instanceof Object
-            const isObjectStructure = structureValue instanceof Object
-            if(isObjectSchema || isObjectStructure) {
-                if(isObjectSchema != isObjectStructure)
-                    throw new JsTypeError(JsTypeMessages.JS_TYPE_103, isObjectSchema, isObjectStructure);
-                const childFilter = coincidence.value;
-                if(!(childFilter instanceof JsTypeCorrelationQuery))
-                    throw new JsTypeError(JsTypeMessages.JS_TYPE_104, JsTypeCorrelationQuery.name);
-                JsTypeCorrelation.valide(schemaValue, structureValue, coincidence.value);
-                continue;
-            }
-            if(structureValue != schemaValue){
-                this.conflicts[coincidence.key] = schemaValue;
-                return false;
-            }
-        }
-        return true;
+    public addCoincidence(key: string) {
+        this.addItem(key, RelationTypes.COINCIDENCE, undefined);
+        return this;
     }
 
-    private isValidable(schema: any) {
-        for (const filter of this.filter.getFilter()) {
-            if(!(filter.value instanceof JsTypeCorrelationQuery) && schema[filter.key] != filter.value)
-                return false;
+    private addItem(key: string, type:RelationTypes, value: any) {
+        const item = this.items[key];
+        if(item == undefined) {
+            this.items[key] = new JsTypeCorrelationItem(key, [type], value);
+            return;
         }
-        return true;
-    }
-
-    private isVector(schema: any, structure: any): boolean {
-        const isSchemaArray = Array.isArray(schema);
-        const isStructureArray = Array.isArray(structure);
-        if(isSchemaArray && ! isStructureArray || !isSchemaArray && isStructureArray)
-            throw new JsTypeError(JsTypeMessages.JS_TYPE_102);
-        return isSchemaArray;
+        item.addType(type);
+        item.value = value;
     }
 
 }

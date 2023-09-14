@@ -6,6 +6,11 @@
   "scripts": {
     "test": "jest"
   },
+  "jest": {
+    "testMatch": [
+        "**/?(*.)+(spec|test).[t]s?(x)"
+    ]
+  },
   "author": "",
   "license": "ISC",
   "devDependencies": {

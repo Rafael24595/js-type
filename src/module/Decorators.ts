@@ -11,8 +11,29 @@
  */
 export const JsTypeDefine = (value: Object) => {
      return((target: any, key: string) => {
-         if(!target.jstypes)
-            target.jstypes = {};
-        target.jstypes[key] = value;
+         if(!target.jstype)
+            target.jstype = {
+                types: {},
+                strict_bounds: false
+            };
+        target.jstype.types[key] = value;
     });
+}
+
+/** 
+ * @param value Must be 'boolean' type.
+ * 
+ * if the value is "true", out of bounds fields will be evaluated,
+ * otherwise these fields will be ignored.
+ */
+export const JsTypeStrictBounds = (value: boolean) => {
+    return((target: any) => {
+        const constructor = target.prototype
+        if(!constructor.jstype)
+        constructor.jstype = {
+               types: {},
+               strict_bounds: false
+           };
+        constructor.jstype.strict_bounds = value;
+   });
 }
